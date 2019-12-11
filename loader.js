@@ -53,6 +53,7 @@ export var Loader = new Promise((resolve, reject) => {
                     loadFBX('./assets/plaquette.fbx', 'tag').then(() => {
                         loadFBX('./assets/logo_feelity.fbx', 'logo').then(() => {
                             loadFont('./assets/helvetiker.typeface.json', 'font').then(() => {
+                                $('#loading').hide();
                                 resolve();
                             }).catch((e) => {
                                 reject(e);
