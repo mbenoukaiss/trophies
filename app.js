@@ -29,20 +29,20 @@ const scene = {
         obj.scene.add(obj.sun);
 
         obj.tl = new Three.PointLight(0xFFFFFF, 1);
-        obj.container = new Three.Mesh(new Three.SphereGeometry(100, 100, 100), new Three.MeshPhongMaterial({
+        obj.sphere = new Three.Mesh(new Three.SphereGeometry(100, 100, 100), new Three.MeshPhongMaterial({
             color: new Three.Color(0x444444),
             side: Three.DoubleSide
         }));
-        obj.container.receiveShadow = true;
-        obj.container.add(obj.tl);
-        obj.scene.add(obj.container);
+        obj.sphere.receiveShadow = true;
+        obj.sphere.add(obj.tl);
+        obj.scene.add(obj.sphere);
 
-        obj.plateau = new Three.Mesh(new Three.PlaneBufferGeometry(1000, 1000, 10), new Three.MeshBasicMaterial({color: 0xFFFFFF}));
+        obj.plateau = new Three.Mesh(new Three.PlaneBufferGeometry(200, 200, 10), new Three.MeshBasicMaterial({color: 0xFFFFFF}));
         obj.plateau.receiveShadow = false;
         obj.plateau.rotation.x = -Math.PI / 2;
         obj.scene.add(obj.plateau);
 
-        obj.shadowplane = new Three.Mesh(new Three.PlaneBufferGeometry(1000, 1000, 10), new Three.ShadowMaterial({opacity: 0.07}));
+        obj.shadowplane = new Three.Mesh(new Three.PlaneBufferGeometry(200, 200, 10), new Three.ShadowMaterial({opacity: 0.07}));
         obj.shadowplane.receiveShadow = true;
         obj.shadowplane.rotation.x = -Math.PI / 2;
         obj.scene.add(obj.shadowplane);
@@ -70,10 +70,10 @@ const scene = {
         //obj.scene.add(axesHelper);
 
         obj.controls = new OrbitControls(obj.camera, obj.renderer.domElement);
-        obj.controls.minDistance = 10;
-        obj.controls.maxDistance = 1000;
+        obj.controls.minDistance = 50;
+        obj.controls.maxDistance = 80;
         obj.controls.minPolarAngle = Math.PI / 4;
-        obj.controls.maxPolarAngle = Math.PI / 2 - Math.PI / 12;
+        obj.controls.maxPolarAngle = Math.PI / 2 - Math.PI / 24;
         obj.controls.minAzimuthAngle = Math.PI / 4 - Math.PI / 12;
         obj.controls.maxAzimuthAngle = Math.PI / 4 + Math.PI / 12;
         obj.controls.target.set(obj.scene.position.x, obj.scene.position.y, obj.scene.position.z);
@@ -91,6 +91,7 @@ const scene = {
         obj.lights.left.shadow.camera.bottom = -50;
         obj.lights.left.shadow.camera.left = -50;
         obj.lights.left.shadow.camera.right = 50;
+        obj.lights.left.shadow.camera.far = 200;
         obj.lights.left.shadow.mapSize.width = 1024;
         obj.lights.left.shadow.mapSize.height = 1024;
         obj.lights.left.position.set(0, 50, 75);
@@ -102,6 +103,7 @@ const scene = {
         obj.lights.right.shadow.camera.bottom = -50;
         obj.lights.right.shadow.camera.left = -50;
         obj.lights.right.shadow.camera.right = 50;
+        obj.lights.right.shadow.camera.far = 200;
         obj.lights.right.shadow.mapSize.width = 1024;
         obj.lights.right.shadow.mapSize.height = 1024;
         obj.lights.right.position.set(75, 50, 0);
