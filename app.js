@@ -62,6 +62,8 @@ const scene = {
                 .place(30, 1, 0)
                 .rotate(0, 0, 0)
                 .show(obj.scene);
+
+            Statue.modifyDisplayText();
         });
 
         scene.placeLights();
@@ -143,6 +145,8 @@ const scene = {
     }
 };
 
+const displayTextListeners = [];
+
 class Statue {
     trophy;
 
@@ -215,17 +219,24 @@ class Statue {
         this.logos.right.position.y = 2.22;
         this.logos.right.position.z = 0;
 
-        let textGeometry = new Three.TextGeometry(Statue.getDisplayedText(), {
-            font: Models.font,
-            size: 1,
-            height: 1,
+        Statue.onModifyDisplayText((text) => {
+            if(this.text !== undefined) {
+                this.trophy.remove(this.text);
+            }
 
+            let textGeometry = new Three.TextGeometry(text, {
+                font: Models.font,
+                size: 1,
+                height: 1,
+            });
+
+            this.text = new Three.Mesh(textGeometry, new Three.MeshLambertMaterial({color: 0x222222}));
+            this.text.geometry.center();
+            this.text.position.y = 2.2;
+            this.text.position.z = 4.3;
+
+            this.trophy.add(this.text);
         });
-
-        this.text = new Three.Mesh(textGeometry, new Three.MeshLambertMaterial({color: 0x222222}));
-        this.text.geometry.center();
-        this.text.position.y = 2.2;
-        this.text.position.z = 4.3;
     }
 
     static create(color) {
@@ -314,7 +325,6 @@ class Statue {
         this.trophy.add(this.tag);
         this.trophy.add(this.logos.left);
         this.trophy.add(this.logos.right);
-        this.trophy.add(this.text);
 
         this.trophy.castShadow = true;
 
@@ -343,14 +353,23 @@ class Statue {
         return meshes;
     }
 
-    static getDisplayedText() {
+    static onModifyDisplayText(fn) {
+        displayTextListeners.push(fn);
+    }
+
+    static modifyDisplayText() {
         let text = window.location.href.split("#")[1];
-        return text === undefined ? "DAWIN" : text;
+        text = text === undefined ? "DAWIN" : text;
+
+        for (let fn of displayTextListeners) {
+            fn(text);
+        }
     }
 }
 
-window.addEventListener("resize", scene.onWindowResize, false);
-window.addEventListener("mousemove", scene.onMouseMove, false);
+window.onresize = scene.onWindowResize;
+window.onmousemove = scene.onMouseMove;
+window.onhashchange = Statue.modifyDisplayText;
 
 scene.init();
 scene.animate();
